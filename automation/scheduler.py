@@ -6,7 +6,7 @@ Owns the scheduling layer for TeleGAssistant. This module initialises
 and runs all background jobs that drive the bot's proactive behaviour —
 daily briefings, deadline reminders, Canvas data syncs, and any other
 timed system tasks.
-
+source
 Usage (called from main entry point):
     from automation.scheduler import start_scheduler
     start_scheduler()
