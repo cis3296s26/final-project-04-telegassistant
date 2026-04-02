@@ -19,5 +19,5 @@ class FakeAI(AbstractAI):
         )
 
     async def health_check(self) -> bool:
-        print("[FakeAI] health_check() called → returning True")
+        print("[FakeAI] health_check() called -> returning True")
         return True

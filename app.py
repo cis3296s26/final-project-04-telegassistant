@@ -17,9 +17,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # --- Swap these imports out as real implementations become ready ---
-from stubs.fake_db  import FakeDB
-from stubs.fake_ai  import FakeAI
-from stubs.fake_bot import FakeBot
+from stubs.fake_db       import FakeDB
+from stubs.fake_ai       import FakeAI
+from bot.telegram_client import TelegramBotClient
 
 from scheduler      import create_scheduler
 from jobs.briefing  import run_daily_briefing
@@ -32,7 +32,7 @@ async def main():
     # Initialize components
     db  = FakeDB()
     ai  = FakeAI()
-    bot = FakeBot()
+    bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"))
 
     db.connect()
 
@@ -60,7 +60,7 @@ async def main():
     scheduler.start()
     logger.info("Scheduler started. Jobs will run on schedule.")
 
-    # Start fake bot polling
+    # Start bot polling
     bot_task = asyncio.create_task(bot.start_polling())
 
     # Keep running until Ctrl+C
