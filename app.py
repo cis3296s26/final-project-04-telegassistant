@@ -3,9 +3,11 @@ import asyncio
 import logging
 import os
 import sys
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# Load .env from project root
+load_dotenv(str(Path(__file__).parent / ".env"))
 
 logging.basicConfig(
     level=logging.INFO,

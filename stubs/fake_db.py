@@ -18,7 +18,7 @@ class FakeDB(AbstractDB):
 
     def get_active_users(self):
         return [
-            {"id": 1, "telegram_id": 7654120499, "name": "Sid"},
+            {"id": 1, "telegram_id": 5623685402, "name": "Ben"},
         ]
 
     def get_tasks_for_user(self, user_id, due_before):
