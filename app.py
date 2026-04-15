@@ -18,7 +18,7 @@ logger = logging.getLogger(__name__)
 
 # --- Swap these imports out as real implementations become ready ---
 from stubs.fake_db       import FakeDB
-from stubs.fake_ai       import FakeAI
+from ai.llm_client       import LLMClient
 from bot.telegram_client import TelegramBotClient
 
 from scheduler      import create_scheduler
@@ -31,7 +31,7 @@ async def main():
 
     # Initialize components
     db  = FakeDB()
-    ai  = FakeAI()
+    ai  = LLMClient()
     bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"))
 
     db.connect()
