@@ -11,6 +11,17 @@ REMINDER_WINDOWS = [
 ]
 
 
+def _get_reminder_label(time_left):
+    # Match the nearest configured reminder window.
+    if time_left <= timedelta(minutes=30):
+        return "30min"
+    if time_left <= timedelta(hours=2):
+        return "2h"
+    if time_left <= timedelta(hours=24):
+        return "24h"
+    return None
+
+
 async def run_reminder_check(db, telegram_bot):
     logger.info("Reminder check started")
     users = db.get_active_users()
@@ -38,24 +49,25 @@ async def _check_reminders_for_user(user, db, telegram_bot):
         if time_left.total_seconds() < 0:
             continue
 
-        for window, label in REMINDER_WINDOWS:
-            if time_left <= window:
-                already_sent = db.check_reminder_sent(
-                    user_id=user_id,
-                    item_id=deadline["id"],
-                    item_type="deadline",
-                    remind_type=label,
-                )
+        label = _get_reminder_label(time_left)
+        if not label:
+            continue
 
-                if not already_sent:
-                    await _send_reminder(telegram_bot, telegram_id, deadline, label, time_left)
-                    db.log_reminder_sent(
-                        user_id=user_id,
-                        item_id=deadline["id"],
-                        item_type="deadline",
-                        remind_type=label,
-                    )
-                break
+        already_sent = db.check_reminder_sent(
+            user_id=user_id,
+            item_id=deadline["id"],
+            item_type="deadline",
+            remind_type=label,
+        )
+
+        if not already_sent:
+            await _send_reminder(telegram_bot, telegram_id, deadline, label, time_left)
+            db.log_reminder_sent(
+                user_id=user_id,
+                item_id=deadline["id"],
+                item_type="deadline",
+                remind_type=label,
+            )
 
 
 async def _send_reminder(telegram_bot, chat_id, deadline, label, time_left):
