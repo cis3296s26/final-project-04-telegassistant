@@ -17,9 +17,15 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # --- Swap these imports out as real implementations become ready ---
+<<<<<<< Automation-role
 from stubs.fake_db  import FakeDB
 from stubs.fake_ai  import FakeAI
 from stubs.fake_bot import FakeBot
+=======
+from data.database_client import DatabaseClient
+from ai.llm_client        import LLMClient
+from bot.telegram_client import TelegramBotClient
+>>>>>>> local
 
 from scheduler      import create_scheduler
 from jobs.briefing  import run_daily_briefing
@@ -30,9 +36,15 @@ async def main():
     logger.info("TeleGAssistant starting up...")
 
     # Initialize components
+<<<<<<< Automation-role
     db  = FakeDB()
     ai  = FakeAI()
     bot = FakeBot()
+=======
+    db  = DatabaseClient(db_path=os.getenv("DB_PATH", "data/telegassistant.db"))
+    ai  = LLMClient()
+    bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"))
+>>>>>>> local
 
     db.connect()
 
