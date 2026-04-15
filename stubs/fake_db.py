@@ -18,7 +18,7 @@ class FakeDB(AbstractDB):
 
     def get_active_users(self):
         return [
-            {"id": 1, "telegram_id": 7654120499, "name": "Sid"},
+            {"id": 1, "telegram_id": 1313153114, "name": "Vrushil"},
         ]
 
     def get_tasks_for_user(self, user_id, due_before):
@@ -39,7 +39,7 @@ class FakeDB(AbstractDB):
         return [
             {
                 "id":       1,
-                "title":    "CIS 3850 Homework 6",
+                "title":    "CIS 3296 Project Due",
                 "due_date": date.today() + timedelta(days=2),
             },
         ]
