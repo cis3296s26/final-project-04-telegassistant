@@ -1,5 +1,5 @@
 from datetime import datetime
-from app.db.connection import get_connection
+from db.connection import get_connection
 
 
 def get_or_create_user(
@@ -12,7 +12,6 @@ def get_or_create_user(
     conn = get_connection()
     cursor = conn.cursor()
 
-    # Check if user exists
     cursor.execute(
         """
         SELECT * FROM users WHERE telegram_user_id = ?
@@ -25,7 +24,6 @@ def get_or_create_user(
         conn.close()
         return dict(user)
 
-    # Create new user
     now = datetime.utcnow().isoformat()
 
     cursor.execute(
@@ -51,7 +49,6 @@ def get_or_create_user(
 
     conn.commit()
 
-    # Fetch newly created user
     cursor.execute(
         """
         SELECT * FROM users WHERE telegram_user_id = ?
