@@ -1,130 +1,203 @@
-TeleGAssistant 🤖📱
-Overview
+# TeleGAssistant 🤖📱
+An AI-powered personal assistant for managing tasks and deadlines via Telegram.
 
-TeleGAssistant is a locally hosted AI-powered personal assistant that integrates with Telegram to help students manage tasks, deadlines, and daily schedules.
+## Overview
 
-Unlike traditional productivity tools, TeleGAssistant uses a local LLM (Large Language Model) to provide conversational interaction, intelligent task parsing, and personalized daily planning — all while keeping user data private and on-device.
+TeleGAssistant is a locally-hosted AI assistant that runs entirely on your computer. It integrates with Telegram to help you manage tasks, deadlines, and daily schedules while keeping all your data private and on your machine.
 
-🚀 Features
+**Key Features:**
+- 💬 Chat with your assistant via Telegram
+- 🧠 Local AI that understands tasks naturally
+- 📅 Daily briefings at 8 AM
+- ⏰ Smart reminders (24h, 2h, 30 min before deadlines)
+- 🔒 All data stays on your machine—no cloud uploads
 
-💬 Telegram Chat Interface
-Interact with your assistant through simple text messages
+---
 
-🧠 Local AI Processing
-Uses a locally hosted LLM (e.g., Gemma 2B) for:
+## Quick Start
 
-Task extraction
+```bash
+# 1. Clone the repository
+git clone https://github.com/cis3296s26/final-project-04-telegassistant.git
+cd final-project-04-telegassistant
 
-Deadline understanding
+# 2. Create virtual environment
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-Daily planning
+# 3. Install dependencies
+pip install -r requirements.txt
 
-📅 Smart Scheduling System
-Automatically:
+# 4. Configure environment
+cp .env.example .env
+# Edit .env with your BOT_TOKEN and settings
 
-Tracks deadlines
+# 5. Set up local AI (in a separate terminal)
+ollama pull gemma:2b
+ollama serve
 
-Sends reminders
+# 6. Initialize database
+python scripts/seed_db.py
 
-Prioritizes tasks
+# 7. Run the bot
+python app.py
+```
 
-🗂️ Persistent Task Storage
-Stores tasks and deadlines locally using a lightweight database
+---
 
-🔒 Privacy-Focused
-Runs entirely on a local machine (e.g., Raspberry Pi) — no cloud dependency
+## Prerequisites
 
-🏗️ System Architecture
-User (Telegram)
-        ↓
-Telegram Bot (API Layer)
-        ↓
-Backend System
-   ├── LLM Module (Task Understanding)
-   ├── Scheduler (Reminders & Planning)
-   └── Database (Task Storage)
-        ↓
-Response → Telegram
-🧩 Tech Stack
+- **Python** 3.8+
+- **Telegram** (app or web version)
+- **Ollama** (for local AI) - [Download here](https://ollama.ai)
+- **Git** (for cloning)
 
-Backend: Python / Java
+---
 
-LLM: Gemma 2B (local inference)
+## Configuration
 
-Database: SQLite
+### Getting Your Bot Token
 
-Interface: Telegram Bot API
+1. Open Telegram and search for `@BotFather`
+2. Type `/newbot` and follow the prompts
+3. Copy the token and paste it in your `.env` file
 
-Hardware (optional): Raspberry Pi 4
+### Environment Variables
 
-⚙️ How It Works
+Create or update `.env` with:
+```env
+BOT_TOKEN=your_telegram_bot_token
+DB_PATH=data/telegassistant.db
+LLM_BASE_URL=http://localhost:11434
+LLM_MODEL=gemma:2b
+```
 
-User sends a message via Telegram
+---
 
-"I have a midterm on Friday"
+## How to Use
 
-LLM processes and extracts structured data
+Once running, send messages to your bot in Telegram:
 
-Task: Study for midterm  
-Deadline: Friday  
+**Add a task:**
+```
+"I need to complete chapter 8 by Friday"
+→ Bot saves task and sets reminders
+```
 
-Task is stored in the database
+**Get daily briefing:**
+The bot automatically sends a summary every morning at 8 AM with:
+- Your tasks
+- Upcoming deadlines
+- Scheduled events
 
-Scheduler:
+---
 
-Tracks deadlines
+## Testing
 
-Sends reminders
+Run the test suite:
+```bash
+pytest
+```
 
-Generates daily summaries
+Check code coverage:
+```bash
+pytest --cov=jobs --cov-report=term-missing
+```
 
-👥 Team Structure
+**Coverage Stats:**
+- `briefing.py`: 87%
+- `reminders.py`: 91%
+- **Total**: 88% (exceeds 80% requirement)
 
-LLM Engineer → AI + prompt design
+---
 
-Scheduler Engineer → timing + logic
+## Project Structure
 
-Database Engineer → storage + queries
+```
+final-project-04-telegassistant/
+├── app.py                  # Main entry point
+├── requirements.txt        # Python dependencies
+├── .env.example           # Configuration template
+├── ai/                    # AI & LLM integration
+├── bot/                   # Telegram bot
+├── data/                  # Database
+├── jobs/                  # Scheduled tasks
+│   ├── briefing.py        # Daily briefing job
+│   └── reminders.py       # Reminder system
+├── scripts/               # Utility scripts
+│   └── seed_db.py         # Database setup
+├── tests/                 # Test suite
+│   ├── test_briefing.py
+│   └── test_reminders.py
+└── stubs/                 # Test mocks
+```
 
-Integration Engineer → Telegram + system glue
+---
 
-🛠️ Setup (High-Level)
+## Deployment
 
-Clone the repository
+### Production on Linux/macOS
 
-git clone https://github.com/yourusername/TeleGAssistant.git
+```bash
+# Copy service file
+sudo cp telegassistant.service /etc/systemd/system/
 
-Set up Telegram Bot API
+# Enable and start
+sudo systemctl enable telegassistant
+sudo systemctl start telegassistant
 
-Download and configure local LLM
+# Check status
+sudo systemctl status telegassistant
+```
 
-Initialize database
+### On Raspberry Pi
 
-Run backend server
+Install Python 3.8+, follow the Quick Start steps, and use systemd service to keep it running 24/7.
 
-📌 Future Improvements
+---
 
-Calendar integrations (Google/Canvas scraping)
+## Dependencies
 
-Voice input support
+| Package | Version | Purpose |
+|---------|---------|---------|
+| APScheduler | 3.11.2 | Job scheduling |
+| python-telegram-bot | 21.9 | Telegram API |
+| python-dotenv | 1.2.2 | Environment config |
+| httpx | 0.28.1 | HTTP client |
+| pytest | 9.0.3 | Testing |
+| pytest-cov | 7.1.0 | Coverage reporting |
 
-Multi-user support
+---
 
-Smarter planning algorithms
+## Database Schema
 
-UI dashboard
+| Table | Columns | Purpose |
+|-------|---------|---------|
+| **Users** | id, telegram_id, name | Store user info |
+| **Tasks** | id, user_id, description, created_at | Store tasks |
+| **Deadlines** | id, task_id, due_date, completed | Track deadlines |
+| **Events** | id, user_id, title, scheduled_time | Store events |
 
-💡 Motivation
+---
 
-TeleGAssistant is designed to solve the problem of fragmented productivity tools by combining:
+## Development
 
-conversational AI
+To contribute:
 
-scheduling
+1. Create a feature branch: `git checkout -b feature/your-feature`
+2. Make changes and write tests
+3. Run: `pytest`
+4. Commit and push: `git commit -m "Description"`
+5. Create a pull request
 
-and task management
+---
 
-into a single, seamless system tailored for students managing complex workloads.
+## License
+
+Part of Temple University CIS 3296 (Software Design).
+
+---
+
+**Version:** 1.0 | **Status:** Production Ready ✅
 
 
-edited by Ben DiLuigi

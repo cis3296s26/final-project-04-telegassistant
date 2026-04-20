@@ -2,3 +2,11 @@
 __pycache__/
 *.pyc
 *.pyo
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+coverage.xml
+reports/
+.DS_Store
+data/telegassistant.db
