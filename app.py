@@ -32,7 +32,7 @@ async def main():
     # Initialize components
     db  = FakeDB()
     ai  = FakeAI()
-    bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"), db=db)
+    bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"), db=db, ai=ai)
 
     db.connect()
 
