@@ -10,6 +10,11 @@ class FakeDB(AbstractDB):
     Replace with the real DatabaseClient once Data Engineer is ready.
     """
 
+    _users: list[dict] = [
+        {"id": 1, "telegram_id": 7654120499, "name": "Sid"},
+    ]
+    _next_id: int = 2
+
     def connect(self):
         print("[FakeDB] connect() called")
 
@@ -17,9 +22,18 @@ class FakeDB(AbstractDB):
         print("[FakeDB] close() called")
 
     def get_active_users(self):
-        return [
-            {"id": 1, "telegram_id": 1313153114, "name": "Vrushil"},
-        ]
+        return list(FakeDB._users)
+
+    def register_user(self, telegram_id: int, name: str) -> int:
+        for user in FakeDB._users:
+            if user["telegram_id"] == telegram_id:
+                print(f"[FakeDB] register_user: {name} already registered, id={user['id']}")
+                return user["id"]
+        new_id = FakeDB._next_id
+        FakeDB._next_id += 1
+        FakeDB._users.append({"id": new_id, "telegram_id": telegram_id, "name": name})
+        print(f"[FakeDB] register_user: new user {name} (telegram_id={telegram_id}) -> id={new_id}")
+        return new_id
 
     def get_tasks_for_user(self, user_id, due_before):
         return [
@@ -63,7 +77,6 @@ class FakeDB(AbstractDB):
             },
         ]
 
-    # Track sent reminders in memory (resets each run — fine for testing)
     _sent = set()
 
     def check_reminder_sent(self, user_id, item_id, item_type, remind_type):

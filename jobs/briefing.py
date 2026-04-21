@@ -22,7 +22,7 @@ async def run_daily_briefing(db, ai_client, telegram_bot):
     logger.info(f"Sending briefings to {len(users)} user(s)")
 
     tasks = [
-        _send_briefing_for_user(user, db, ai_client, telegram_bot)
+        send_briefing_for_user(user, db, ai_client, telegram_bot)
         for user in users
     ]
     results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -36,7 +36,7 @@ async def run_daily_briefing(db, ai_client, telegram_bot):
     logger.info("=== Daily Briefing Pipeline complete ===")
 
 
-async def _send_briefing_for_user(user, db, ai_client, telegram_bot):
+async def send_briefing_for_user(user, db, ai_client, telegram_bot):
     telegram_id = user["telegram_id"]
     user_id     = user["id"]
 

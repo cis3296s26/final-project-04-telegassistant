@@ -120,6 +120,18 @@ class AbstractDB(ABC):
         """Records that a reminder was sent. Used to prevent duplicates."""
         ...
 
+    @abstractmethod
+    def register_user(self, telegram_id: int, name: str) -> int:
+        """
+        Registers a new Telegram user, or returns existing user's internal ID
+        if they have already been registered.
+
+        Called by the Bot Engineer when a user sends /start.
+
+        Returns the internal DB user ID (int).
+        """
+        ...
+
 
 # ------------------------------------------------------------
 # AI ENGINEER implements this
