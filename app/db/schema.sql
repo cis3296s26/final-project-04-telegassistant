@@ -41,8 +41,10 @@ CREATE TABLE IF NOT EXISTS deadlines (
     title TEXT NOT NULL,
     due_at TEXT NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending',
+    external_id TEXT,
     created_at TEXT NOT NULL,
     updated_at TEXT NOT NULL,
+    UNIQUE(user_id, title, due_at),
     FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

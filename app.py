@@ -24,6 +24,7 @@ from bot.telegram_client import TelegramBotClient
 from scheduler      import create_scheduler
 from jobs.briefing  import run_daily_briefing
 from jobs.reminders import run_reminder_check
+from db.sync_canvas_job import sync_canvas_data
 
 
 async def main():
@@ -56,7 +57,11 @@ async def main():
     logger.info("Smoke test complete.")
 
     # Start scheduler
-    scheduler = create_scheduler(briefing_job, reminder_job)
+    scheduler = create_scheduler(
+    briefing_job,
+    reminder_job,
+    canvas_sync_job=sync_canvas_data,
+)
     scheduler.start()
     logger.info("Scheduler started. Jobs will run on schedule.")
 
