@@ -107,6 +107,21 @@ class DatabaseClient(AbstractDB):
             )
         return items
 
+    def register_user(self, telegram_id: int, name: str) -> int:
+        existing = self._query_one(
+            "SELECT id FROM users WHERE telegram_id = ?", (telegram_id,)
+        )
+        if existing:
+            return existing["id"]
+        self._execute(
+            "INSERT INTO users (telegram_id, name, active) VALUES (?, ?, 1)",
+            (telegram_id, name),
+        )
+        row = self._query_one(
+            "SELECT id FROM users WHERE telegram_id = ?", (telegram_id,)
+        )
+        return row["id"]
+
     def check_reminder_sent(self, user_id: int, item_id: int, item_type: str, remind_type: str) -> bool:
         row = self._query_one(
             """
