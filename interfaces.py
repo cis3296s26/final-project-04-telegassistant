@@ -132,6 +132,58 @@ class AbstractDB(ABC):
         """
         ...
 
+    @abstractmethod
+    def add_task(self, user_id: int, title: str, due_datetime: datetime, description: str = "") -> int:
+        """
+        Inserts a new task. Returns the new task's DB id.
+
+        due_datetime must be a full datetime (date + time) so the
+        reminder job can fire a 30-min warning and a due-time prompt.
+        description is optional — pass "" to omit.
+        """
+        ...
+
+    @abstractmethod
+    def remove_task(self, task_id: int) -> None:
+        """Deletes a task by its DB id."""
+        ...
+
+    @abstractmethod
+    def add_reminder(self, user_id: int, text: str, remind_at: datetime, recurrence: str) -> int:
+        """
+        Inserts a custom reminder. Returns the new reminder's DB id.
+
+        recurrence must be one of: "none", "daily", "weekly".
+        remind_at is the first fire time.
+        """
+        ...
+
+    @abstractmethod
+    def get_due_reminders(self, now: datetime) -> list[dict]:
+        """
+        Returns all reminders whose remind_at <= now.
+
+        Expected dict shape:
+        {
+            "id":         int,
+            "user_id":    int,
+            "text":       str,
+            "remind_at":  datetime,
+            "recurrence": str,   # "none", "daily", "weekly"
+        }
+        """
+        ...
+
+    @abstractmethod
+    def update_reminder_time(self, reminder_id: int, next_remind_at: datetime) -> None:
+        """Advance remind_at to the next occurrence for recurring reminders."""
+        ...
+
+    @abstractmethod
+    def delete_reminder(self, reminder_id: int) -> None:
+        """Deletes a reminder by its DB id."""
+        ...
+
 
 # ------------------------------------------------------------
 # AI ENGINEER implements this

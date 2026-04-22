@@ -44,10 +44,7 @@ async def main():
     async def reminder_job():
         await run_reminder_check(db, bot)
 
-    logger.info("Running smoke test jobs...")
-    await briefing_job()
-    await reminder_job()
-    logger.info("Smoke test complete.")
+    logger.info("Startup complete. Briefings will run on schedule.")
 
     scheduler = create_scheduler(briefing_job, reminder_job)
     scheduler.start()
