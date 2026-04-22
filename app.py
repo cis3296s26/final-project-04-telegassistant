@@ -16,10 +16,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# --- Swap these imports out as real implementations become ready ---
 from data.database_client import DatabaseClient
 from ai.llm_client        import LLMClient
-from bot.telegram_client import TelegramBotClient
+from bot.telegram_client  import TelegramBotClient
 
 from scheduler      import create_scheduler
 from jobs.briefing  import run_daily_briefing
@@ -29,10 +28,9 @@ from jobs.reminders import run_reminder_check
 async def main():
     logger.info("TeleGAssistant starting up...")
 
-    # Initialize components
     db  = DatabaseClient(db_path=os.getenv("DB_PATH", "data/telegassistant.db"))
     ai  = LLMClient()
-    bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"))
+    bot = TelegramBotClient(token=os.getenv("BOT_TOKEN"), db=db, ai=ai)
 
     db.connect()
 
@@ -40,30 +38,20 @@ async def main():
     if not llm_ok:
         logger.warning("LLM server unreachable — briefings will use fallback")
 
-    # Wire jobs with injected dependencies
     async def briefing_job():
         await run_daily_briefing(db, ai, bot)
 
     async def reminder_job():
         await run_reminder_check(db, bot)
 
-    # --- WEEK 1 SMOKE TEST ---
-    # Run both jobs immediately on startup so you can
-    # see them work without waiting for 8 AM.
-    logger.info("Running smoke test jobs...")
-    await briefing_job()
-    await reminder_job()
-    logger.info("Smoke test complete.")
+    logger.info("Startup complete. Briefings will run on schedule.")
 
-    # Start scheduler
     scheduler = create_scheduler(briefing_job, reminder_job)
     scheduler.start()
     logger.info("Scheduler started. Jobs will run on schedule.")
 
-    # Start bot polling
     bot_task = asyncio.create_task(bot.start_polling())
 
-    # Keep running until Ctrl+C
     try:
         while True:
             await asyncio.sleep(1)

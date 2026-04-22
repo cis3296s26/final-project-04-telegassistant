@@ -2,3 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
+credentials.json
+token.json
+data/telegassistant.db
+app.log
