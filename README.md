@@ -1,130 +1,110 @@
-TeleGAssistant 🤖📱
-Overview
+# TeleGAssistant
 
-TeleGAssistant is a locally hosted AI-powered personal assistant that integrates with Telegram to help students manage tasks, deadlines, and daily schedules.
+An intelligent Telegram bot assistant powered by Claude AI. TeleGAssistant provides daily briefings, weather updates, and personalized reminders via Telegram.
 
-Unlike traditional productivity tools, TeleGAssistant uses a local LLM (Large Language Model) to provide conversational interaction, intelligent task parsing, and personalized daily planning — all while keeping user data private and on-device.
+## Features
 
-🚀 Features
+- **Daily Briefings**: Automated morning summaries powered by Claude AI
+- **Weather Integration**: Real-time weather information  
+- **Smart Reminders**: Personalized reminders based on user preferences
+- **Message Scheduling**: Job scheduling via APScheduler
+- **SQLite Database**: Persistent storage for user data and settings
 
-💬 Telegram Chat Interface
-Interact with your assistant through simple text messages
+## Tech Stack
 
-🧠 Local AI Processing
-Uses a locally hosted LLM (e.g., Gemma 2B) for:
+- **Language**: Python 3.12
+- **Bot Framework**: Telegram Bot API
+- **LLM**: Claude API (Anthropic)
+- **Scheduler**: APScheduler
+- **Database**: SQLite3
 
-Task extraction
+## Project Structure
 
-Deadline understanding
+```
+.
+├── ai/              # LLM and external API clients
+│   ├── llm_client.py      # Claude API integration
+│   ├── gmail_client.py    # Gmail integration
+│   └── weather_client.py  # Weather data fetching
+├── bot/             # Telegram bot interface
+│   ├── telegram_client.py # Bot command handlers
+│   └── ui.py              # UI/message formatting
+├── data/            # Database and persistence
+│   └── database_client.py # SQLite wrapper
+├── automation/      # Scheduled job management
+│   └── scheduler.py       # Job scheduling setup
+├── jobs/            # Scheduled tasks
+│   ├── briefing.py        # Daily briefing job
+│   └── reminders.py       # Reminder checking job
+├── app.py           # Main application entry point
+└── scheduler.py     # Scheduler factory
+```
 
-Daily planning
+## Setup Instructions
 
-📅 Smart Scheduling System
-Automatically:
+### Prerequisites
 
-Tracks deadlines
+- Python 3.12+
+- Telegram Bot Token (create via BotFather on Telegram)
+- Claude API Key (from Anthropic)
+- (Optional) Gmail credentials for email integration
 
-Sends reminders
+### Installation
 
-Prioritizes tasks
+1. Clone the repository:
+```bash
+git clone https://github.com/nightmarehel/telegassistant.git
+cd telegassistant
+```
 
-🗂️ Persistent Task Storage
-Stores tasks and deadlines locally using a lightweight database
+2. Create a virtual environment:
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-🔒 Privacy-Focused
-Runs entirely on a local machine (e.g., Raspberry Pi) — no cloud dependency
+3. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
 
-🏗️ System Architecture
-User (Telegram)
-        ↓
-Telegram Bot (API Layer)
-        ↓
-Backend System
-   ├── LLM Module (Task Understanding)
-   ├── Scheduler (Reminders & Planning)
-   └── Database (Task Storage)
-        ↓
-Response → Telegram
-🧩 Tech Stack
+4. Create a `.env` file in the project root with your credentials:
+```
+BOT_TOKEN=your_telegram_bot_token_here
+ANTHROPIC_API_KEY=your_claude_api_key_here
+DB_PATH=data/telegassistant.db
+```
 
-Backend: Python / Java
+5. Run the bot:
+```bash
+python app.py
+```
 
-LLM: Gemma 2B (local inference)
+## Configuration
 
-Database: SQLite
+Edit `.env` to customize:
+- `BOT_TOKEN`: Get from Telegram BotFather (@BotFather)
+- `ANTHROPIC_API_KEY`: Get from Anthropic console
+- `DB_PATH`: Path to SQLite database file
 
-Interface: Telegram Bot API
+Sensitive files (`.env`, `credentials.json`, `token.json`) are in `.gitignore` and will never be committed.
 
-Hardware (optional): Raspberry Pi 4
+## Usage
 
-⚙️ How It Works
+Once running, interact with the bot on Telegram:
+- `/start` - Initialize the bot
+- `/briefing` - Request an immediate briefing  
+- `/remind` - Set a reminder
+- `/weather` - Get current weather
 
-User sends a message via Telegram
+## Development
 
-"I have a midterm on Friday"
+Code is organized by function:
+- **ai/**: All external API integrations (Claude, Gmail, weather)
+- **bot/**: Telegram interface and command handling
+- **data/**: Database operations
+- **jobs/**: Scheduled background tasks
 
-LLM processes and extracts structured data
+## License
 
-Task: Study for midterm  
-Deadline: Friday  
-
-Task is stored in the database
-
-Scheduler:
-
-Tracks deadlines
-
-Sends reminders
-
-Generates daily summaries
-
-👥 Team Structure
-
-LLM Engineer → AI + prompt design
-
-Scheduler Engineer → timing + logic
-
-Database Engineer → storage + queries
-
-Integration Engineer → Telegram + system glue
-
-🛠️ Setup (High-Level)
-
-Clone the repository
-
-git clone https://github.com/yourusername/TeleGAssistant.git
-
-Set up Telegram Bot API
-
-Download and configure local LLM
-
-Initialize database
-
-Run backend server
-
-📌 Future Improvements
-
-Calendar integrations (Google/Canvas scraping)
-
-Voice input support
-
-Multi-user support
-
-Smarter planning algorithms
-
-UI dashboard
-
-💡 Motivation
-
-TeleGAssistant is designed to solve the problem of fragmented productivity tools by combining:
-
-conversational AI
-
-scheduling
-
-and task management
-
-into a single, seamless system tailored for students managing complex workloads.
-
-
-edited by Ben DiLuigi
+MIT
